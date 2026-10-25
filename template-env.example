@@ -1,0 +1,24 @@
+# 非敏感的 Rclone / Cloudflare R2 设置
+RCLONE_CONFIG_R2_TYPE=s3
+RCLONE_CONFIG_R2_PROVIDER=Cloudflare
+RCLONE_CONFIG_R2_ENDPOINT=https://96bbd52b4b412e70e847769925c7ae53.r2.cloudflarestorage.com
+RCLONE_CONFIG_R2_REGION=auto
+
+# 在 Runpod 模板界面用 Secret 选择器设置；不要把真实值写进此文件
+RCLONE_CONFIG_R2_ACCESS_KEY_ID={{ RUNPOD_SECRET_r2_access_key_id }}
+RCLONE_CONFIG_R2_SECRET_ACCESS_KEY={{ RUNPOD_SECRET_r2_secret_access_key }}
+
+# 任务设置
+R2_BUCKET=castorice-render-backup
+R2_PREFIX=castorice_vertical/frames
+RENDER_DIR=/workspace/render/frames
+LOG_DIR=/workspace/logs
+R2_INTERVAL_SECONDS=120
+R2_MIN_AGE=2m
+R2_TRANSFERS=4
+R2_CHECKERS=8
+
+# 只有使用 render-with-backup.sh 自动渲染时才需要
+BLEND_FILE=/workspace/project/castorice_vertical.blend
+FRAME_START=0
+FRAME_END=6530

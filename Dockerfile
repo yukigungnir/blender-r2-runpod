@@ -33,8 +33,8 @@ RUN curl -fsSL "https://downloads.rclone.org/v${RCLONE_VERSION}/rclone-v${RCLONE
 
 RUN curl -fsSL "https://github.com/MMD-Blender/blender_mmd_tools/releases/download/v${MMD_TOOLS_VERSION}/mmd_tools-v${MMD_TOOLS_VERSION}-bl4.2.zip" -o /tmp/mmd_tools.zip \
     && echo "${MMD_TOOLS_SHA256}  /tmp/mmd_tools.zip" | sha256sum -c - \
-    && mkdir -p /opt/blender/5.2/scripts/addons \
-    && unzip -q /tmp/mmd_tools.zip -d /opt/blender/5.2/scripts/addons \
+    && mkdir -p /opt/blender/5.2/scripts/addons/mmd_tools \
+    && unzip -q /tmp/mmd_tools.zip -d /opt/blender/5.2/scripts/addons/mmd_tools \
     && test -f /opt/blender/5.2/scripts/addons/mmd_tools/__init__.py \
     && rm /tmp/mmd_tools.zip
 

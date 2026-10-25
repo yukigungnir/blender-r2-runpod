@@ -10,7 +10,7 @@
 - Volume mount path：`/workspace`
 - 暴露端口：纯命令行渲染不需要
 - Allowed CUDA：最低 12.8（与镜像一致）
-- Docker command：留空；需要自动启动时可设 `/opt/render-tools/r2-upload-loop.sh`
+- Docker command：`/opt/render-tools/r2-upload-loop.sh`（Pod 启动后自动运行 R2 上传循环）
 
 如果使用网络卷，卷和 GPU 必须位于同一数据中心。网络卷会持续按容量计费，直到删除；本包本身不要求创建网络卷。
 

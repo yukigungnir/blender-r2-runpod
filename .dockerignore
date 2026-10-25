@@ -1,0 +1,7 @@
+.git
+.github
+*.zip
+准备状态.md
+RUNPOD_TEMPLATE.md
+template-env.example
+scripts/windows-download-from-r2.ps1

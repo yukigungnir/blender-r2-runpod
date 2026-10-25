@@ -3,6 +3,17 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+mkdir -p "$LOG_DIR"
+lock_dir="$LOG_DIR/.r2-upload-loop.lock"
+if ! mkdir "$lock_dir" 2>/dev/null; then
+  printf '[%s] R2 循环备份已在运行，本进程退出。\n' "$(timestamp)"
+  exit 0
+fi
+cleanup_lock() {
+  rmdir -- "$lock_dir" 2>/dev/null || true
+}
+trap cleanup_lock EXIT INT TERM
+
 "$SCRIPT_DIR/preflight.sh"
 printf '[%s] R2 循环备份已启动，每 %s 秒检查一次。\n' "$(timestamp)" "$R2_INTERVAL_SECONDS"
 
@@ -21,3 +32,4 @@ while true; do
   fi
   sleep "$R2_INTERVAL_SECONDS"
 done
+

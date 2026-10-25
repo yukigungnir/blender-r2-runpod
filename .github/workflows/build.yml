@@ -41,8 +41,10 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
+            ghcr.io/${{ github.repository_owner }}/blender-r2-runpod:5.2.2-mmd4.5.14
             ghcr.io/${{ github.repository_owner }}/blender-r2-runpod:5.2.2
             ghcr.io/${{ github.repository_owner }}/blender-r2-runpod:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
+

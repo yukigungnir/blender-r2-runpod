@@ -4,7 +4,7 @@
 
 - 名称：`blender-5.2-r2-autobackup`
 - 可见性：Private
-- Container image：`ghcr.io/yukigungnir/blender-r2-runpod:5.2.2`
+- Container image：`ghcr.io/yukigungnir/blender-r2-runpod:5.2.2-mmd4.5.14`
 - Container disk：20 GB
 - Persistent storage：100 GB，挂载到 `/workspace`；首次 3～5 帧测试后按单帧大小重新估算正式容量
 - Volume mount path：`/workspace`

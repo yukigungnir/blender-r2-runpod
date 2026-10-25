@@ -8,9 +8,9 @@
 - Container disk：20 GB
 - Persistent storage：30 GB，挂载到 `/workspace`；已上传并校验成功的帧会从本地清理，R2 故障时保留未上传帧
 - Volume mount path：`/workspace`
-- 暴露端口：纯命令行渲染不需要
+- 暴露端口：`22/tcp`，只用于通过已登记的 SSH 公钥上传工程和启动渲染
 - Allowed CUDA：最低 12.8（与镜像一致）
-- Docker command：`/opt/render-tools/r2-upload-loop.sh`（Pod 启动后自动运行 R2 上传循环）
+- Docker command：`/opt/render-tools/start-pod.sh`（启动公钥 SSH 和 R2 上传循环）
 
 如果使用网络卷，卷和 GPU 必须位于同一数据中心。网络卷会持续按容量计费，直到删除；本包本身不要求创建网络卷。
 

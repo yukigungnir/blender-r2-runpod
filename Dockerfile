@@ -9,7 +9,7 @@ ARG MMD_TOOLS_SHA256=ed3b78184ae9862be0df04e2e147803d011ad067edd8c31029c92fb719e
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        ca-certificates curl unzip xz-utils \
+        ca-certificates curl unzip xz-utils openssh-server \
         libx11-6 libxi6 libxrender1 libxfixes3 libxxf86vm1 \
         libxkbcommon0 libsm6 libice6 libgl1 libegl1 libopengl0 \
         libglvnd0 libglx0 libvulkan1 \
@@ -55,10 +55,12 @@ ENV PATH="/opt/blender:${PATH}" \
 
 COPY scripts/ /opt/render-tools/
 RUN chmod 0755 /opt/render-tools/*.sh \
+    && install -m 0644 /opt/render-tools/sshd_config_runpod.conf /etc/ssh/sshd_config.d/99-runpod.conf \
+    && mkdir -p /run/sshd /root/.ssh \
     && mkdir -p /workspace/project /workspace/render/frames /workspace/logs \
     && /opt/blender/blender --factory-startup --background \
         --python /opt/render-tools/enable-mmd-tools.py \
         --python-expr "import bpy; assert hasattr(bpy.types.Object, 'mmd_type')"
 
 WORKDIR /workspace
-CMD ["/bin/bash"]
+CMD ["/opt/render-tools/start-pod.sh"]

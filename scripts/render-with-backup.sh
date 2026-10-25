@@ -36,7 +36,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 set +e
-blender -b "$BLEND_FILE" \
+blender --factory-startup --disable-autoexec -b "$BLEND_FILE" \
   -o "$RENDER_DIR/######" \
   -F PNG \
   -s "$FRAME_START" \
@@ -56,3 +56,4 @@ if (( render_status != 0 )); then
 fi
 
 printf '渲染、最终上传和数量/大小核对已完成。\n'
+

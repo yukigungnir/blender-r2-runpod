@@ -8,6 +8,10 @@ set -Eeuo pipefail
 : "${R2_MIN_AGE:=2m}"
 : "${R2_TRANSFERS:=4}"
 : "${R2_CHECKERS:=8}"
+: "${R2_DELETE_AFTER_UPLOAD:=1}"
+: "${R2_RESUME_FROM_REMOTE:=1}"
+: "${R2_MIN_FREE_GB:=5}"
+: "${R2_DISK_CHECK_SECONDS:=30}"
 
 require_command() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -62,6 +66,10 @@ bytes_remote_png() {
   rclone size "$(remote_path)" --include '*.png' --json 2>/dev/null \
     | sed -n 's/.*"bytes"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' \
     | head -n 1
+}
+
+available_kib() {
+  df -Pk "$RENDER_DIR" | awk 'NR == 2 {print $4}'
 }
 
 write_status() {

@@ -8,17 +8,35 @@ FINAL_UPLOAD=1 "$SCRIPT_DIR/r2-upload-pass.sh"
 
 local_count="$(count_local_png)"
 remote_count="$(count_remote_png)"
-local_bytes="$(bytes_local_png)"
 remote_bytes="$(bytes_remote_png)"
 remote_bytes="${remote_bytes:-0}"
+expected_count=$((FRAME_END - FRAME_START + 1))
+
+expected_list="$(mktemp)"
+remote_list="$(mktemp)"
+cleanup_lists() {
+  rm -f -- "$expected_list" "$remote_list"
+}
+trap cleanup_lists EXIT
+
+awk -v start="$FRAME_START" -v end="$FRAME_END" \
+  'BEGIN { for (i = start; i <= end; i++) printf "%06d.png\n", i }' \
+  > "$expected_list"
+rclone lsf "$(remote_path)" --files-only --include '*.png' | sort > "$remote_list"
 
 status=ok
-if [[ "$local_count" != "$remote_count" || "$local_bytes" != "$remote_bytes" ]]; then
+if [[ "$remote_count" != "$expected_count" || "$remote_bytes" == "0" ]]; then
   status=mismatch
 fi
+if ! cmp -s "$expected_list" "$remote_list"; then
+  status=mismatch
+fi
+if [[ "$R2_DELETE_AFTER_UPLOAD" == "1" && "$local_count" != "0" ]]; then
+  status=local_cleanup_incomplete
+fi
 
-printf '{"time":"%s","status":"%s","local_count":%s,"remote_count":%s,"local_bytes":%s,"remote_bytes":%s}\n' \
-  "$(timestamp)" "$status" "$local_count" "$remote_count" "$local_bytes" "$remote_bytes" \
+printf '{"time":"%s","status":"%s","expected_count":%s,"local_remaining":%s,"remote_count":%s,"remote_bytes":%s}\n' \
+  "$(timestamp)" "$status" "$expected_count" "$local_count" "$remote_count" "$remote_bytes" \
   | tee "$LOG_DIR/final-summary.json"
 
 if [[ "$status" != "ok" ]]; then
@@ -26,4 +44,4 @@ if [[ "$status" != "ok" ]]; then
   exit 1
 fi
 
-printf '最终数量与总大小一致。仍需从 R2 抽样打开 PNG 后再删除 Pod。\n'
+printf 'R2 帧名和总帧数核对通过，本地已上传帧已清理。仍需从 R2 抽样打开 PNG 后再删除 Pod。\n'

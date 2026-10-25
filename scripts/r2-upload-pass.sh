@@ -12,9 +12,17 @@ if [[ "${FINAL_UPLOAD:-0}" != "1" ]]; then
   extra_age=(--min-age "$R2_MIN_AGE")
 fi
 
-rclone copy "$RENDER_DIR" "$(remote_path)" \
+transfer_command=copy
+status_name=success_copy
+if [[ "$R2_DELETE_AFTER_UPLOAD" == "1" ]]; then
+  transfer_command=move
+  status_name=success_move
+fi
+
+rclone "$transfer_command" "$RENDER_DIR" "$(remote_path)" \
   --include '*.png' \
   "${extra_age[@]}" \
+  --checksum \
   --transfers "$R2_TRANSFERS" \
   --checkers "$R2_CHECKERS" \
   --retries 10 \
@@ -29,4 +37,4 @@ rclone copy "$RENDER_DIR" "$(remote_path)" \
 
 local_count="$(count_local_png)"
 remote_count="$(count_remote_png)"
-write_status success "$local_count" "$remote_count"
+write_status "$status_name" "$local_count" "$remote_count"

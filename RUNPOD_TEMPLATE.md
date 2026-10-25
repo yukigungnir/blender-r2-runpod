@@ -6,7 +6,7 @@
 - 可见性：Private
 - Container image：`ghcr.io/yukigungnir/blender-r2-runpod:5.2.2-mmd4.5.14`
 - Container disk：20 GB
-- Persistent storage：100 GB，挂载到 `/workspace`；首次 3～5 帧测试后按单帧大小重新估算正式容量
+- Persistent storage：30 GB，挂载到 `/workspace`；已上传并校验成功的帧会从本地清理，R2 故障时保留未上传帧
 - Volume mount path：`/workspace`
 - 暴露端口：纯命令行渲染不需要
 - Allowed CUDA：最低 12.8（与镜像一致）
@@ -38,6 +38,10 @@
 | `R2_INTERVAL_SECONDS` | `120` |
 | `R2_MIN_AGE` | `2m` |
 | `R2_TRANSFERS` | `4` |
+| `R2_DELETE_AFTER_UPLOAD` | `1` |
+| `R2_RESUME_FROM_REMOTE` | `1` |
+| `R2_MIN_FREE_GB` | `5` |
+| `R2_DISK_CHECK_SECONDS` | `30` |
 
 ## 启动后无泄密检查
 
@@ -55,6 +59,5 @@
 2. 设置 3～5 帧范围。
 3. 运行 `/opt/render-tools/render-with-backup.sh`。
 4. 检查 `/workspace/logs/r2-upload.log` 和 `/workspace/logs/final-summary.json`。
-5. 模拟重启上传循环，再确认相同文件被跳过。
+5. 模拟中断后重启，再确认会从 R2 中最早缺失的帧继续。
 6. 抽样从 R2 下载两张 PNG 并打开。
-

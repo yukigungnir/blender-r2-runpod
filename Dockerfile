@@ -47,7 +47,11 @@ ENV PATH="/opt/blender:${PATH}" \
     R2_INTERVAL_SECONDS="120" \
     R2_MIN_AGE="2m" \
     R2_TRANSFERS="4" \
-    R2_CHECKERS="8"
+    R2_CHECKERS="8" \
+    R2_DELETE_AFTER_UPLOAD="1" \
+    R2_RESUME_FROM_REMOTE="1" \
+    R2_MIN_FREE_GB="5" \
+    R2_DISK_CHECK_SECONDS="30"
 
 COPY scripts/ /opt/render-tools/
 RUN chmod 0755 /opt/render-tools/*.sh \
@@ -58,4 +62,3 @@ RUN chmod 0755 /opt/render-tools/*.sh \
 
 WORKDIR /workspace
 CMD ["/bin/bash"]
-

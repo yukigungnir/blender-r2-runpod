@@ -5,7 +5,8 @@
 - 名称：`blender-5.2-r2-autobackup`
 - 可见性：Private
 - Container image：`ghcr.io/yukigungnir/blender-r2-runpod:5.2.2`
-- Container disk：20 GB 起；大型工程按实际依赖增大
+- Container disk：20 GB
+- Persistent storage：100 GB，挂载到 `/workspace`；首次 3～5 帧测试后按单帧大小重新估算正式容量
 - Volume mount path：`/workspace`
 - 暴露端口：纯命令行渲染不需要
 - Allowed CUDA：最低 12.8（与镜像一致）
@@ -28,9 +29,9 @@
 | --- | --- |
 | `RCLONE_CONFIG_R2_TYPE` | `s3` |
 | `RCLONE_CONFIG_R2_PROVIDER` | `Cloudflare` |
-| `RCLONE_CONFIG_R2_ENDPOINT` | `https://ACCOUNT_ID.r2.cloudflarestorage.com` |
+| `RCLONE_CONFIG_R2_ENDPOINT` | `https://96bbd52b4b412e70e847769925c7ae53.r2.cloudflarestorage.com` |
 | `RCLONE_CONFIG_R2_REGION` | `auto` |
-| `R2_BUCKET` | 实际 Bucket 名称 |
+| `R2_BUCKET` | `castorice-render-backup` |
 | `R2_PREFIX` | `castorice_vertical/frames` |
 | `RENDER_DIR` | `/workspace/render/frames` |
 | `LOG_DIR` | `/workspace/logs` |
@@ -56,3 +57,4 @@
 4. 检查 `/workspace/logs/r2-upload.log` 和 `/workspace/logs/final-summary.json`。
 5. 模拟重启上传循环，再确认相同文件被跳过。
 6. 抽样从 R2 下载两张 PNG 并打开。
+

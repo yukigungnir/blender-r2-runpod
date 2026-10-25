@@ -13,7 +13,7 @@
 
 ## 目录
 
-- `Dockerfile`：Blender 5.2.2 + Rclone 的固定运行环境。
+- `Dockerfile`：Blender 5.2.2 + MMD Tools 4.5.14 + Rclone 的固定运行环境。
 - `scripts/render-with-backup.sh`：正式入口，同时启动渲染和后台备份。
 - `scripts/r2-upload-loop.sh`：只启动循环备份，适合在 Blender GUI 中手工渲染。
 - `scripts/finalize-and-verify.sh`：最终复制与校验。
@@ -27,7 +27,7 @@
 本仓库的 GitHub Actions 会自动构建并发布公开镜像：
 
 ```text
-ghcr.io/yukigungnir/blender-r2-runpod:5.2.2
+ghcr.io/yukigungnir/blender-r2-runpod:5.2.2-mmd4.5.14
 ```
 
 只有在需要自行构建时，才使用下面的命令。
@@ -120,3 +120,4 @@ Rclone 1.62 起有原生 `pikpak` 后端，因此不需要依赖 WebDAV。只在
 ## 费用边界
 
 本包不会创建 GPU Pod，也不会自动停止 Runpod 计费。正式租用前必须根据实时 GPU 单价单独设置最大运行时长/预算守护；不要依赖旧版 CLI 的 `--stop-after` 或 `--terminate-after` 参数。
+

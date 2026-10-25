@@ -36,7 +36,9 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 set +e
-blender --factory-startup --disable-autoexec -b "$BLEND_FILE" \
+blender --factory-startup --disable-autoexec --background \
+  --python "$SCRIPT_DIR/enable-mmd-tools.py" \
+  "$BLEND_FILE" \
   -o "$RENDER_DIR/######" \
   -F PNG \
   -s "$FRAME_START" \
